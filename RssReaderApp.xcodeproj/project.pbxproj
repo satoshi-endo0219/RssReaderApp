@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		74106CEA2AF9D2B7009F120F /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74106CE92AF9D2B7009F120F /* APIError.swift */; };
+		74106CEC2AF9D358009F120F /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74106CEB2AF9D358009F120F /* APIClient.swift */; };
+		74106CEE2AF9D4C8009F120F /* RssFeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74106CED2AF9D4C8009F120F /* RssFeedData.swift */; };
 		745724242AF38AB3007CE4EF /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745724232AF38AB3007CE4EF /* Const.swift */; };
 		749148C22AF33D960051A205 /* RssReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749148C12AF33D960051A205 /* RssReaderApp.swift */; };
 		749148C62AF33D970051A205 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 749148C52AF33D970051A205 /* Assets.xcassets */; };
@@ -36,6 +39,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		74106CE92AF9D2B7009F120F /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = APIError.swift; path = ../../Model/APIError.swift; sourceTree = "<group>"; };
+		74106CEB2AF9D358009F120F /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = APIClient.swift; path = ../../Model/APIClient.swift; sourceTree = "<group>"; };
+		74106CED2AF9D4C8009F120F /* RssFeedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RssFeedData.swift; path = RssReaderApp/Model/RssFeedData.swift; sourceTree = SOURCE_ROOT; };
 		745724232AF38AB3007CE4EF /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		749148BE2AF33D960051A205 /* RssReaderApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RssReaderApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		749148C12AF33D960051A205 /* RssReaderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RssReaderApp.swift; sourceTree = "<group>"; };
@@ -75,6 +81,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		74106CE82AF9D1E4009F120F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				74106CE92AF9D2B7009F120F /* APIError.swift */,
+				74106CEB2AF9D358009F120F /* APIClient.swift */,
+				74106CED2AF9D4C8009F120F /* RssFeedData.swift */,
+			);
+			name = Model;
+			path = Const/Model;
+			sourceTree = "<group>";
+		};
 		745724222AF38A9A007CE4EF /* Const */ = {
 			isa = PBXGroup;
 			children = (
@@ -110,7 +127,7 @@
 				749148EF2AF34CC30051A205 /* View */,
 				745724222AF38A9A007CE4EF /* Const */,
 				749148C52AF33D970051A205 /* Assets.xcassets */,
-				749148F42AF35EE70051A205 /* Model */,
+				74106CE82AF9D1E4009F120F /* Model */,
 				749148C72AF33D970051A205 /* Preview Content */,
 			);
 			path = RssReaderApp;
@@ -148,13 +165,6 @@
 				749148F22AF35B690051A205 /* SelectRssFeedVIew.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		749148F42AF35EE70051A205 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -290,7 +300,10 @@
 				749148F32AF35B690051A205 /* SelectRssFeedVIew.swift in Sources */,
 				745724242AF38AB3007CE4EF /* Const.swift in Sources */,
 				749148F12AF351F50051A205 /* LaunchScreen.swift in Sources */,
+				74106CEA2AF9D2B7009F120F /* APIError.swift in Sources */,
+				74106CEE2AF9D4C8009F120F /* RssFeedData.swift in Sources */,
 				749148C22AF33D960051A205 /* RssReaderApp.swift in Sources */,
+				74106CEC2AF9D358009F120F /* APIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,9 +464,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RssReaderApp/Preview Content\"";
+				DEVELOPMENT_TEAM = T5F3R2HNNP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -461,6 +476,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -468,6 +484,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.endo.3104.satoshi.RssReaderApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -479,9 +496,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RssReaderApp/Preview Content\"";
+				DEVELOPMENT_TEAM = T5F3R2HNNP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -489,6 +508,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -496,6 +516,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.endo.3104.satoshi.RssReaderApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
