@@ -9,9 +9,10 @@ import Foundation
 
 class Const {
     // MARK: - SplashScreem
-    static let SplashText = "RSSReaderApp";
+    static let splashText = "RSSReaderApp";
 
     // MARK: - SelectRssFeedView
+    static let selectRssFeedViewTitle = "RSSフィード選択画面";
     static let topPics = "主要";
     static let topPicsXML = "https://news.yahoo.co.jp/rss/topics/top-picks.xml";
     static let domestic = "国内";
