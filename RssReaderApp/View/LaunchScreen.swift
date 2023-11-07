@@ -8,16 +8,29 @@
 import SwiftUI
 
 struct LaunchScreen: View {
+@State var isActive = false
+
     var body: some View {
         VStack {
-            VStack {
-                Image(systemName: "globe")
-                    .imageScale(.large)
-                    .foregroundStyle(.tint)
+            if isActive {
+                SelectRssFeedView()
+            }else {
+                VStack {
+                    Image(systemName: "globe")
+                        .imageScale(.large)
+                        .foregroundStyle(.tint)
+                }
+                .padding()
+                Text(Const.SplashText)
+                    .foregroundColor(.red)
             }
-            .padding()
-            Text("RSSReaderApp")
-                .foregroundColor(.red)
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                withAnimation {
+                    self.isActive = true
+                }
+            }
         }
     }
 }
