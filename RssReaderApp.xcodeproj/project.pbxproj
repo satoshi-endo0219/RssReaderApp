@@ -11,6 +11,11 @@
 		74106CEC2AF9D358009F120F /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74106CEB2AF9D358009F120F /* APIClient.swift */; };
 		74106CEE2AF9D4C8009F120F /* RssFeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74106CED2AF9D4C8009F120F /* RssFeedData.swift */; };
 		745724242AF38AB3007CE4EF /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745724232AF38AB3007CE4EF /* Const.swift */; };
+		745E36ED2AFB1B0E00E07AEF /* RSSReaderApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 745E36EB2AFB1B0E00E07AEF /* RSSReaderApp.xcdatamodeld */; };
+		745E36F62AFB1CD400E07AEF /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745E36F52AFB1CD400E07AEF /* Persistence.swift */; };
+		745E36F92AFB1E0900E07AEF /* SelectFeedData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745E36F72AFB1E0900E07AEF /* SelectFeedData+CoreDataClass.swift */; };
+		745E36FA2AFB1E0900E07AEF /* SelectFeedData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745E36F82AFB1E0900E07AEF /* SelectFeedData+CoreDataProperties.swift */; };
+		745E36FC2AFB254500E07AEF /* SelectFeedDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745E36FB2AFB254500E07AEF /* SelectFeedDataViewModel.swift */; };
 		749148C22AF33D960051A205 /* RssReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749148C12AF33D960051A205 /* RssReaderApp.swift */; };
 		749148C62AF33D970051A205 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 749148C52AF33D970051A205 /* Assets.xcassets */; };
 		749148C92AF33D970051A205 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 749148C82AF33D970051A205 /* Preview Assets.xcassets */; };
@@ -45,6 +50,11 @@
 		74106CEB2AF9D358009F120F /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		74106CED2AF9D4C8009F120F /* RssFeedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RssFeedData.swift; path = RssReaderApp/Model/RssFeedData.swift; sourceTree = SOURCE_ROOT; };
 		745724232AF38AB3007CE4EF /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
+		745E36EC2AFB1B0E00E07AEF /* RSSReaderApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RSSReaderApp.xcdatamodel; sourceTree = "<group>"; };
+		745E36F52AFB1CD400E07AEF /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		745E36F72AFB1E0900E07AEF /* SelectFeedData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectFeedData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		745E36F82AFB1E0900E07AEF /* SelectFeedData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectFeedData+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		745E36FB2AFB254500E07AEF /* SelectFeedDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFeedDataViewModel.swift; sourceTree = "<group>"; };
 		749148BE2AF33D960051A205 /* RssReaderApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RssReaderApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		749148C12AF33D960051A205 /* RssReaderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RssReaderApp.swift; sourceTree = "<group>"; };
 		749148C52AF33D970051A205 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -103,6 +113,17 @@
 			path = Const;
 			sourceTree = "<group>";
 		};
+		745E36F42AFB1C5D00E07AEF /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				745E36EB2AFB1B0E00E07AEF /* RSSReaderApp.xcdatamodeld */,
+				745E36F72AFB1E0900E07AEF /* SelectFeedData+CoreDataClass.swift */,
+				745E36F82AFB1E0900E07AEF /* SelectFeedData+CoreDataProperties.swift */,
+				745E36F52AFB1CD400E07AEF /* Persistence.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		749148B52AF33D950051A205 = {
 			isa = PBXGroup;
 			children = (
@@ -132,6 +153,7 @@
 				749148C52AF33D970051A205 /* Assets.xcassets */,
 				74106CE82AF9D1E4009F120F /* Model */,
 				74E5A7E32AFA1ADD0044042D /* ViewModel */,
+				745E36F42AFB1C5D00E07AEF /* CoreData */,
 				749148C72AF33D970051A205 /* Preview Content */,
 			);
 			path = RssReaderApp;
@@ -176,6 +198,7 @@
 			isa = PBXGroup;
 			children = (
 				74E5A7E42AFA1B070044042D /* RssFeedViewModel.swift */,
+				745E36FB2AFB254500E07AEF /* SelectFeedDataViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -313,7 +336,12 @@
 				749148F32AF35B690051A205 /* SelectRssFeedVIew.swift in Sources */,
 				74E5A7E22AF9FBDF0044042D /* NewsListView.swift in Sources */,
 				745724242AF38AB3007CE4EF /* Const.swift in Sources */,
+				745E36FA2AFB1E0900E07AEF /* SelectFeedData+CoreDataProperties.swift in Sources */,
+				745E36FC2AFB254500E07AEF /* SelectFeedDataViewModel.swift in Sources */,
+				745E36F92AFB1E0900E07AEF /* SelectFeedData+CoreDataClass.swift in Sources */,
+				745E36ED2AFB1B0E00E07AEF /* RSSReaderApp.xcdatamodeld in Sources */,
 				74E5A7E52AFA1B070044042D /* RssFeedViewModel.swift in Sources */,
+				745E36F62AFB1CD400E07AEF /* Persistence.swift in Sources */,
 				749148F12AF351F50051A205 /* LaunchScreen.swift in Sources */,
 				74106CEA2AF9D2B7009F120F /* APIError.swift in Sources */,
 				74106CEE2AF9D4C8009F120F /* RssFeedData.swift in Sources */,
@@ -650,6 +678,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		745E36EB2AFB1B0E00E07AEF /* RSSReaderApp.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				745E36EC2AFB1B0E00E07AEF /* RSSReaderApp.xcdatamodel */,
+			);
+			currentVersion = 745E36EC2AFB1B0E00E07AEF /* RSSReaderApp.xcdatamodel */;
+			path = RSSReaderApp.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 749148B62AF33D950051A205 /* Project object */;
 }

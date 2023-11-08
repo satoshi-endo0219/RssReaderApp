@@ -10,7 +10,8 @@ import SwiftUI
 struct NewsListView: View {
     var url: String?
     @ObservedObject private var viewModel = RssFeedViewModel()
-
+    @ObservedObject private var selectFeedDataViewModel = SelectFeedDataViewModel()
+    @Environment(\.managedObjectContext)private var context
     var body: some View {
         NavigationView {
             List {
@@ -23,11 +24,13 @@ struct NewsListView: View {
                             displayMode: .inline)
         .onAppear(perform: {
             self.viewModel.loadData(url: url)
+            selectFeedDataViewModel.writeData(context: context)
         })
     }
 
     init(url: String?) {
         self.url = url
+        self.selectFeedDataViewModel.url = url ?? ""
     }
 }
 
