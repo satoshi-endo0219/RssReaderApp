@@ -27,16 +27,17 @@ struct SelectRssFeedView: View {
 
     var body: some View {
         NavigationView {
-            List{
+            List {
                 ForEach(feedlist, id: \.self) { feed in
-                    Button(action: {
-                        print("・\(feed.name)ボタン押下")
-                    }, label: {
-                        Text("・\(feed.name)")
-                    })
+                    NavigationLink(
+                        destination: NewsListView(url: feed.url),
+                        label: {
+                            Text("・\(feed.name)")
+                        }
+                    )
                 }
             }
-            .navigationBarTitle("RSSフィード選択画面",displayMode: .inline)
+            .navigationBarTitle(Const.selectRssFeedViewTitle, displayMode: .inline)
         }
     }
 

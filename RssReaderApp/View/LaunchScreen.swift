@@ -21,7 +21,7 @@ struct LaunchScreen: View {
                         .foregroundStyle(.tint)
                 }
                 .padding()
-                Text(Const.SplashText)
+                Text(Const.splashText)
                     .foregroundColor(.red)
             }
         }

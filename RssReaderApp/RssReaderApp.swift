@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct RssReaderApp: App {
+    let persistenceController = PersistenceController.shared
+
     var body: some Scene {
         WindowGroup {
             LaunchScreen()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }

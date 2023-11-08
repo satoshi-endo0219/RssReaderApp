@@ -8,26 +8,39 @@
 import Foundation
 
 protocol APIClientProtocol {
-    func fetch(url: String, completion: @escaping ((Result<RssFeedData, APIError>) -> Void))
+    /// RSSFeedDataを取得する
+    /// - Parameters:
+    ///   - rssFeedUrl: dataを取得するURL
+    ///   - completion: 成功、失敗を返す
+    func fetchRSSFeedData(rssFeedUrl: String?, completion: @escaping ((Result<RssFeedData, APIError>) -> Void))
 }
 
-class APIClient: APIClientProtocol {
-    func fetch(url: String, completion: @escaping ((Result<RssFeedData, APIError>) -> Void)) {
-        guard let url: URL =  URL(string:"https://api.rss2json.com/v1/api.json?rss_url=\(url)") else {
+class APIClient: APIClientProtocol {   
+    var isLoading = false
+
+    func fetchRSSFeedData(rssFeedUrl: String?, completion: @escaping ((Result<RssFeedData, APIError>) -> Void)) {
+        if isLoading {
+            return
+        }
+        guard let rssFeedUrl = rssFeedUrl, let url: URL =  URL(string:"https://api.rss2json.com/v1/api.json?rss_url=\(rssFeedUrl)") else {
             return completion(.failure(.invalidURL))
         }
 
         let request = URLRequest(url: url)
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = `self` else { return }
+            isLoading = true
             do {
                 guard let data = data else { throw APIError.networkError }
                 guard let rssFeedData = try? JSONDecoder().decode(RssFeedData.self, from: data) else {
                     throw APIError.emptyValue
                 }
                 DispatchQueue.main.async {
+                    self.isLoading = false
                     completion(.success(rssFeedData))
                 }
             } catch {
+                self.isLoading = false
                 if error as? APIError == APIError.networkError {
                     completion(.failure(.networkError))
                 } else if error as? APIError == APIError.emptyValue {

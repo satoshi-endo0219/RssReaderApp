@@ -8,20 +8,49 @@
 import Foundation
 
 struct RssFeedData: Codable {
+    /// feedのデータ
     let feed: FeedData
+    /// 記事一覧のデータ
     let items: [NewsItem]
+
+    init(feed: FeedData, items: [NewsItem]) {
+        self.feed = feed
+        self.items = items
+    }
 }
 
 struct FeedData: Codable {
+    /// feedDataを取得したURL
     let url: String
+    /// Feedのタイトル
     let title: String
+    /// linkのURL
     let link: URL
+    /// Feedの説明
     let description: String
+
+    init(url: String, title: String, link: URL, description: String) {
+        self.url = url
+        self.title = title
+        self.link = link
+        self.description = description
+    }
 }
 
-struct NewsItem: Codable {
+struct NewsItem: Codable, Hashable {
+    /// Newsタイトル
     let title: String
+    /// NewsのLink
     let link: URL
+    /// guid
     let guid: String
+    /// pubDate
     let pubDate: String
+
+    init(title: String, link: URL, guid: String, pubDate: String) {
+        self.title = title
+        self.link = link
+        self.guid = guid
+        self.pubDate = pubDate
+    }
 }
