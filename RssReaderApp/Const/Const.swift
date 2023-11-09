@@ -31,4 +31,7 @@ class Const {
     static let scienceXML = "https://news.yahoo.co.jp/rss/topics/science.xml";
     static let local = "地域";
     static let localXML = "https://news.yahoo.co.jp/rss/topics/local.xml";
+
+    // MARK: - NewsListView
+    static let toSelectRssFeedView = "RSSフィード選択画面へ";
 }

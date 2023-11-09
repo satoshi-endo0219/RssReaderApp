@@ -14,6 +14,7 @@ class SelectFeedDataViewModel: ObservableObject {
 
     private let request = NSFetchRequest<SelectFeedData>(entityName: "SelectFeedData")
 
+    @Environment(\.managedObjectContext)private var context
     /// CoreDataへデータを書き込む
     /// - Parameter:
     ///   - context: レコードの操作を管理するマネージャー
@@ -79,8 +80,6 @@ class SelectFeedDataViewModel: ObservableObject {
     /// - Parameter:
     ///   - context: レコードの操作を管理するマネージャー
     func getData(context: NSManagedObjectContext) -> [SelectFeedData] {
-        let request = NSFetchRequest<SelectFeedData>(entityName: "SelectFeedData")
-
         do {
             let fetchData = try context.fetch(request)
             return fetchData
@@ -88,6 +87,15 @@ class SelectFeedDataViewModel: ObservableObject {
         catch {
             fatalError()
         }
+    }
+    /// CoreDataから保存されているURLを取得する
+    /// - Parameter:
+    ///   - feedDatas: CoreDataから取得したデータ
+    func getUrlFromCoreData(feedDatas: [SelectFeedData]) -> String? {
+        for feedData in feedDatas {
+            return feedData.url
+        }
+        return nil
     }
 }
 

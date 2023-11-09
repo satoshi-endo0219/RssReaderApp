@@ -27,20 +27,19 @@ class APIClient: APIClientProtocol {
         }
 
         let request = URLRequest(url: url)
+        isLoading = true
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             guard let self = `self` else { return }
-            isLoading = true
+            self.isLoading = false
             do {
                 guard let data = data else { throw APIError.networkError }
                 guard let rssFeedData = try? JSONDecoder().decode(RssFeedData.self, from: data) else {
                     throw APIError.emptyValue
                 }
                 DispatchQueue.main.async {
-                    self.isLoading = false
                     completion(.success(rssFeedData))
                 }
             } catch {
-                self.isLoading = false
                 if error as? APIError == APIError.networkError {
                     completion(.failure(.networkError))
                 } else if error as? APIError == APIError.emptyValue {
