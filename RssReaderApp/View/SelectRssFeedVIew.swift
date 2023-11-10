@@ -26,22 +26,24 @@ struct SelectRssFeedView: View {
     ]
     @ObservedObject private var selectFeedDataViewModel = SelectFeedDataViewModel()
     @Environment(\.managedObjectContext)private var context
+    var isNavBarHidden = false
     var body: some View {
         let feedDatas = selectFeedDataViewModel.getData(context: context)
         if feedDatas.isEmpty {
             // CoreDataにデータがない時
-            NavigationView {
+            NavigationStack {
                 List {
                     ForEach(feedlist, id: \.self) { feed in
                         NavigationLink(
                             destination: NewsListView(url: feed.url),
                             label: {
-                                Text("・\(feed.name)")
+                                Text(feed.name)
                             }
                         )
                     }
                 }
-                .navigationBarTitle(Const.selectRssFeedViewTitle, displayMode: .inline)
+                .navigationTitle(Const.selectRssFeedViewTitle)
+                .navigationBarTitleDisplayMode(.inline)
                 .navigationBarBackButtonHidden(true)
             }
         } else {
@@ -51,18 +53,21 @@ struct SelectRssFeedView: View {
                     NavigationLink(
                         destination: NewsListView(url: feed.url),
                         label: {
-                            Text("・\(feed.name)")
+                            Text(feed.name)
                         }
                     )
                 }
             }
-            .navigationBarTitle(Const.selectRssFeedViewTitle, displayMode: .inline)
+            .navigationTitle(Const.selectRssFeedViewTitle)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
             .customBackButton()
         }
     }
 
-    init() {
+    init(isNavBarHidden: Bool = false) {
         setupNavigationBar()
+        self.isNavBarHidden = isNavBarHidden
     }
 
     func setupNavigationBar() {
@@ -92,7 +97,6 @@ struct CustomBackButton: ViewModifier {
     @Environment(\.dismiss) var dismiss
     func body(content: Content) -> some View {
         content
-            .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(

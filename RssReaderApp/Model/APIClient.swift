@@ -36,10 +36,12 @@ class APIClient: APIClientProtocol {
                 guard let rssFeedData = try? JSONDecoder().decode(RssFeedData.self, from: data) else {
                     throw APIError.emptyValue
                 }
+                print("rssFeedData: \(rssFeedData)")
                 DispatchQueue.main.async {
                     completion(.success(rssFeedData))
                 }
             } catch {
+                print("error: \(error)")
                 if error as? APIError == APIError.networkError {
                     completion(.failure(.networkError))
                 } else if error as? APIError == APIError.emptyValue {
