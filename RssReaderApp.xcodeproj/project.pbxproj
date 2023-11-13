@@ -24,6 +24,7 @@
 		749148DF2AF33D980051A205 /* RssReaderAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749148DE2AF33D980051A205 /* RssReaderAppUITestsLaunchTests.swift */; };
 		749148F12AF351F50051A205 /* LaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749148F02AF351F50051A205 /* LaunchScreen.swift */; };
 		749148F32AF35B690051A205 /* SelectRssFeedVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749148F22AF35B690051A205 /* SelectRssFeedVIew.swift */; };
+		74CC4A972B01ADD600DFAAB0 /* DetailNewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74CC4A962B01ADD600DFAAB0 /* DetailNewsView.swift */; };
 		74E5A7E22AF9FBDF0044042D /* NewsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E5A7E12AF9FBDF0044042D /* NewsListView.swift */; };
 		74E5A7E52AFA1B070044042D /* RssFeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E5A7E42AFA1B070044042D /* RssFeedViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -66,6 +67,7 @@
 		749148DE2AF33D980051A205 /* RssReaderAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RssReaderAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		749148F02AF351F50051A205 /* LaunchScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreen.swift; sourceTree = "<group>"; };
 		749148F22AF35B690051A205 /* SelectRssFeedVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectRssFeedVIew.swift; sourceTree = "<group>"; };
+		74CC4A962B01ADD600DFAAB0 /* DetailNewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailNewsView.swift; sourceTree = "<group>"; };
 		74E5A7E12AF9FBDF0044042D /* NewsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListView.swift; sourceTree = "<group>"; };
 		74E5A7E42AFA1B070044042D /* RssFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RssFeedViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -190,6 +192,7 @@
 				749148F02AF351F50051A205 /* LaunchScreen.swift */,
 				749148F22AF35B690051A205 /* SelectRssFeedVIew.swift */,
 				74E5A7E12AF9FBDF0044042D /* NewsListView.swift */,
+				74CC4A962B01ADD600DFAAB0 /* DetailNewsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -337,6 +340,7 @@
 				74E5A7E22AF9FBDF0044042D /* NewsListView.swift in Sources */,
 				745724242AF38AB3007CE4EF /* Const.swift in Sources */,
 				745E36FA2AFB1E0900E07AEF /* SelectFeedData+CoreDataProperties.swift in Sources */,
+				74CC4A972B01ADD600DFAAB0 /* DetailNewsView.swift in Sources */,
 				745E36FC2AFB254500E07AEF /* SelectFeedDataViewModel.swift in Sources */,
 				745E36F92AFB1E0900E07AEF /* SelectFeedData+CoreDataClass.swift in Sources */,
 				745E36ED2AFB1B0E00E07AEF /* RSSReaderApp.xcdatamodeld in Sources */,

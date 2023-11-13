@@ -25,11 +25,11 @@ struct FeedData: Codable {
     /// Feedのタイトル
     let title: String
     /// linkのURL
-    let link: URL
+    let link: String
     /// Feedの説明
     let description: String
 
-    init(url: String, title: String, link: URL, description: String) {
+    init(url: String, title: String, link: String, description: String) {
         self.url = url
         self.title = title
         self.link = link
@@ -41,13 +41,13 @@ struct NewsItem: Codable, Hashable {
     /// Newsタイトル
     let title: String
     /// NewsのLink
-    let link: URL
+    let link: String
     /// guid
     let guid: String
     /// pubDate
     let pubDate: String
 
-    init(title: String, link: URL, guid: String, pubDate: String) {
+    init(title: String, link: String, guid: String, pubDate: String) {
         self.title = title
         self.link = link
         self.guid = guid

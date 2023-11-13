@@ -20,7 +20,15 @@ struct NewsListView: View {
             List {
                 Section(header: Text(viewModel.rssFeedData?.feed.title ?? "" )) {
                     ForEach(viewModel.rssFeedData?.items ?? [], id: \.self) { newsItem in
-                        Text("・\(newsItem.title)")
+                        NavigationLink(
+                            destination: {
+                                DetailNewsView(url: newsItem.link)
+                            },
+                            label: {
+                                Text("・\(newsItem.title)")
+                            }
+                        )
+//                        Text("・\(newsItem.title)")
                     }
                 }
                 NavigationLink {

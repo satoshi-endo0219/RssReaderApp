@@ -35,7 +35,9 @@ struct SelectRssFeedView: View {
                 List {
                     ForEach(feedlist, id: \.self) { feed in
                         NavigationLink(
-                            destination: NewsListView(url: feed.url),
+                            destination: {
+                                NewsListView(url: feed.url)
+                            },
                             label: {
                                 Text(feed.name)
                             }
