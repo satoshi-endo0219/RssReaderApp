@@ -34,4 +34,7 @@ class Const {
 
     // MARK: - NewsListView
     static let toSelectRssFeedView = "RSSフィード選択画面へ";
+
+    static let sortItemsNew = "新着順"
+    static let sortItemsOld = "古い順"
 }
