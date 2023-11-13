@@ -9,11 +9,18 @@ import SwiftUI
 
 struct LaunchScreen: View {
 @State var isActive = false
-
+    @ObservedObject private var selectFeedDataViewModel = SelectFeedDataViewModel()
+    @Environment(\.managedObjectContext)private var context
     var body: some View {
         VStack {
             if isActive {
-                SelectRssFeedView()
+                let feedDatas = selectFeedDataViewModel.getData(context: context)
+                if feedDatas.isEmpty {
+                    SelectRssFeedView()
+                } else {
+                    let url = selectFeedDataViewModel.getUrlFromCoreData(feedDatas: feedDatas)
+                    NewsListView(url: url)
+                }
             }else {
                 VStack {
                     Image(systemName: "globe")

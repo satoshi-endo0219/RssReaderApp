@@ -12,20 +12,31 @@ struct NewsListView: View {
     @ObservedObject private var viewModel = RssFeedViewModel()
     @ObservedObject private var selectFeedDataViewModel = SelectFeedDataViewModel()
     @Environment(\.managedObjectContext)private var context
+
+    static let rowHeight: CGFloat = 50
+    static let rowMargin: CGFloat = 0.5
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
-                ForEach(viewModel.rssFeedData?.items ?? [], id: \.self) { newsItem in
-                    Text("・\(newsItem.title)")
+                Section(header: Text(viewModel.rssFeedData?.feed.title ?? "" )) {
+                    ForEach(viewModel.rssFeedData?.items ?? [], id: \.self) { newsItem in
+                        Text("・\(newsItem.title)")
+                    }
+                }
+                NavigationLink {
+                    SelectRssFeedView()
+                } label: {
+                    Text(Const.toSelectRssFeedView)
                 }
             }
+            .navigationTitle("記事一覧")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
         }
-        .navigationBarTitle(viewModel.rssFeedData?.feed.title ?? "",
-                            displayMode: .inline)
-        .onAppear(perform: {
+        .onAppear {
             self.viewModel.loadData(url: url)
             selectFeedDataViewModel.writeData(context: context)
-        })
+        }
     }
 
     init(url: String?) {
