@@ -11,7 +11,7 @@ struct RssFeedData: Codable {
     /// feedのデータ
     let feed: FeedData
     /// 記事一覧のデータ
-    let items: [NewsItem]
+    var items: [NewsItem]
 
     init(feed: FeedData, items: [NewsItem]) {
         self.feed = feed

@@ -15,26 +15,44 @@ struct NewsListView: View {
 
     static let rowHeight: CGFloat = 50
     static let rowMargin: CGFloat = 0.5
+    
+    let sortItems: [String] = [Const.sortItemsNew, Const.sortItemsOld]
+    @State private var selectedIndex = 0
+
     var body: some View {
         NavigationStack {
-            List {
-                Section(header: Text(viewModel.rssFeedData?.feed.title ?? "" )) {
-                    ForEach(viewModel.rssFeedData?.items ?? [], id: \.self) { newsItem in
-                        NavigationLink(
-                            destination: {
-                                DetailNewsView(url: newsItem.link)
-                            },
-                            label: {
-                                Text("・\(newsItem.title)")
-                            }
-                        )
-//                        Text("・\(newsItem.title)")
-                    }
+            VStack {
+                HStack {
+                    Spacer()
+                    Text("並び替え:")
+                        .font(.system(size: 16))
+                    Picker("並び替え", selection: $selectedIndex, content: {
+                        ForEach(0 ..< sortItems.count, id: \.self) { num in
+                            Text(self.sortItems[num])
+                        }
+                    })
                 }
-                NavigationLink {
-                    SelectRssFeedView()
-                } label: {
-                    Text(Const.toSelectRssFeedView)
+                .onChange(of: selectedIndex) { num in
+                    viewModel.sort(sortItem: sortItems[num])
+                }
+                List {
+                    Section(header: Text(viewModel.rssFeedData.feed.title)) {
+                        ForEach(viewModel.rssFeedData.items, id: \.self) { newsItem in
+                            NavigationLink(
+                                destination: {
+                                    DetailNewsView(url: newsItem.link)
+                                },
+                                label: {
+                                    Text("・\(newsItem.title)")
+                                }
+                            )
+                        }
+                    }
+                    NavigationLink {
+                        SelectRssFeedView()
+                    } label: {
+                        Text(Const.toSelectRssFeedView)
+                    }
                 }
             }
             .navigationTitle("記事一覧")
