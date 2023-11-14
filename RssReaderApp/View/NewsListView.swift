@@ -13,13 +13,9 @@ struct NewsListView: View {
     @ObservedObject private var selectFeedDataViewModel = SelectFeedDataViewModel()
     @ObservedObject private var favoriteFeedDataViewModel = FavoriteFeedDataViewModel()
     @Environment(\.managedObjectContext)private var context
-
-    static let rowHeight: CGFloat = 50
-    static let rowMargin: CGFloat = 0.5
     
-    let sortItems: [String] = [Const.sortItemsNew, Const.sortItemsOld]
+    let sortItems: [String] = [Const.sortItemsNew, Const.sortItemsOld, Const.favorite]
     @State private var selectedIndex = 0
-    @State private var isFavorite = false
     @State private var favoriteFeedDatas: [FavoriteFeedData] = []
 
     var body: some View {
@@ -36,48 +32,54 @@ struct NewsListView: View {
                     })
                 }
                 .onChange(of: selectedIndex) { num in
-                    viewModel.sort(sortItem: sortItems[num])
+                    if sortItems[num] == Const.favorite {
+                        favoriteFeedDatas = favoriteFeedDataViewModel.getAllData(context: context)
+                    } else {
+                        viewModel.sort(sortItem: sortItems[num])
+                    }
                 }
                 List {
-                    Section(header: Text(viewModel.rssFeedData.feed.title)) {
-                        ForEach(viewModel.rssFeedData.items, id: \.self) { newsItem in
-                            NavigationLink(
-                                destination: {
-                                    DetailNewsView(url: newsItem.link)
-                                },
-                                label: {
-                                    Text("・\(newsItem.title)")
+                    if sortItems[selectedIndex] == Const.favorite {
+                        Section(header: Text(Const.favorite)) {
+                            ForEach($favoriteFeedDatas, id: \.self, editActions: .delete) { $favoriteItem in
+                                NavigationLink(
+                                    destination: {
+                                        DetailNewsView(url: favoriteItem.url)
+                                    }, label: {
+                                        Text("・\(favoriteItem.title ?? "")")
+                                    }
+                                )
+                            }.onDelete(perform: { indexSet in
+                                for index in indexSet{
+                                    let deleteGuid = favoriteFeedDatas[index].guid
+                                    favoriteFeedDataViewModel.deleteGuid = deleteGuid ?? ""
+                                    favoriteFeedDataViewModel.deleteData(context: context)
                                 }
-                            )
-                            .swipeActions(edge: .trailing) {
-                                Button(action:{
-                                    self.isFavorite = getIsFavorite(newsItem: newsItem)
-                                    self.isFavorite.toggle()
-                                    if self.isFavorite {
-                                        print("お気に入り登録：\(newsItem)")
-                                        favoriteFeedDataViewModel.favoriteItem = newsItem
-                                        favoriteFeedDataViewModel.writeData(context: context)
-                                    } else {
-                                        print("お気に入り登録解除：\(newsItem)")
-                                        favoriteFeedDataViewModel.deleteGuid = newsItem.guid
-                                        favoriteFeedDataViewModel.deleteData(context: context)
+                                rowRemove(offsets: indexSet)
+                            })
+                        }
+                    } else {
+                        Section(header: Text(viewModel.rssFeedData.feed.title)) {
+                            ForEach(viewModel.rssFeedData.items, id: \.self) { newsItem in
+                                NavigationLink(
+                                    destination: {
+                                        DetailNewsView(url: newsItem.link)
+                                    },
+                                    label: {
+                                        Text("・\(newsItem.title)")
                                     }
-                                }) {
-                                    if getIsFavorite(newsItem: newsItem) {
-                                        Text(Const.registerdFavorite)
-                                    } else {
-                                        Text(Const.nonRegisterdFavorite)
-                                    }
-
+                                )
+                                .swipeActions(edge: .trailing) {
+                                    NewsListSwipeActionButton(newsItem: newsItem)
                                 }
                             }
                         }
-                    }
-                    Section {
-                        NavigationLink {
-                            SelectRssFeedView()
-                        } label: {
-                            Text(Const.toSelectRssFeedView)
+                        Section {
+                            NavigationLink {
+                                SelectRssFeedView()
+                            } label: {
+                                Text(Const.toSelectRssFeedView)
+                            }
                         }
                     }
                 }
@@ -96,6 +98,49 @@ struct NewsListView: View {
         self.url = url
         self.selectFeedDataViewModel.url = url ?? ""
     }
+    /// 行削除処理
+    func rowRemove(offsets: IndexSet) {
+        favoriteFeedDatas.remove(atOffsets: offsets)
+    }
+}
+
+struct NewsListView_preview: PreviewProvider {
+    static var previews: some View {
+        NewsListView(url: Const.topPicsXML)
+    }
+}
+
+struct NewsListSwipeActionButton: View {
+    @ObservedObject private var favoriteFeedDataViewModel = FavoriteFeedDataViewModel()
+    @State var newsItem: NewsItem
+    @State private var favoriteFeedDatas: [FavoriteFeedData] = []
+    @State private var isFavorite = false
+    @Environment(\.managedObjectContext)private var context
+    var body: some View {
+        Button(action:{
+            self.isFavorite = getIsFavorite(newsItem: newsItem)
+            self.isFavorite.toggle()
+            if self.isFavorite {
+                print("お気に入り登録：\(newsItem)")
+                favoriteFeedDataViewModel.favoriteItem = newsItem
+                favoriteFeedDataViewModel.writeData(context: context)
+            } else {
+                print("お気に入り登録解除：\(newsItem)")
+                favoriteFeedDataViewModel.deleteGuid = newsItem.guid
+                favoriteFeedDataViewModel.deleteData(context: context)
+            }
+        }) {
+            if getIsFavorite(newsItem: newsItem) {
+                Text(Const.registerdFavorite)
+            } else {
+                Text(Const.nonRegisterdFavorite)
+            }
+        }
+    }
+
+    init (newsItem: NewsItem) {
+        self.newsItem = newsItem
+    }
 
     func getIsFavorite(newsItem: NewsItem) -> Bool {
         DispatchQueue.main.async {
@@ -108,11 +153,5 @@ struct NewsListView: View {
             }
         }
         return false
-    }
-}
-
-struct NewsListView_preview: PreviewProvider {
-    static var previews: some View {
-        NewsListView(url: Const.topPicsXML)
     }
 }

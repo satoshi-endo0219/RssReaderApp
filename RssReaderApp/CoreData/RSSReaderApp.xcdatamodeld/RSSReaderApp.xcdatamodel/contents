@@ -4,7 +4,7 @@
         <attribute name="guid" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="pubDate" optional="YES" attributeType="String"/>
-        <attribute name="titie" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="String"/>
     </entity>
     <entity name="SelectFeedData" representedClassName="SelectFeedData" syncable="YES">

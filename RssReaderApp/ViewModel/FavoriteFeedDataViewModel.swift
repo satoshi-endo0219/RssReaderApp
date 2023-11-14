@@ -1,5 +1,5 @@
 //
-//  FavoriteFeedDataVIewModel.swift
+//  FavoriteFeedDataViewModel.swift
 //  RssReaderApp
 //
 //  Created by satoshi on 2023/11/13.
@@ -23,6 +23,7 @@ class FavoriteFeedDataViewModel: ObservableObject {
     func writeData(context: NSManagedObjectContext) {
         insertData(context: context)
     }
+    
     /// CoreDataへinsertを実行する処理
     /// - Parameter:
     ///   - context: レコードの操作を管理するマネージャー
@@ -32,7 +33,7 @@ class FavoriteFeedDataViewModel: ObservableObject {
                 let newFavoriteFeedData = FavoriteFeedData(context: context)
                 newFavoriteFeedData.id = UUID().uuidString
                 newFavoriteFeedData.url = favoriteItem.link
-                newFavoriteFeedData.titie = favoriteItem.title
+                newFavoriteFeedData.title = favoriteItem.title
                 newFavoriteFeedData.guid = favoriteItem.guid
                 newFavoriteFeedData.pubDate = favoriteItem.pubDate
                 try context.save()
