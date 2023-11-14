@@ -37,4 +37,7 @@ class Const {
 
     static let sortItemsNew = "新着順"
     static let sortItemsOld = "古い順"
+
+    static let registerdFavorite = "お気に入り\n登録済み"
+    static let nonRegisterdFavorite = "お気に入り\n未登録"
 }
