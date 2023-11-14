@@ -11,6 +11,7 @@ struct NewsListView: View {
     var url: String?
     @ObservedObject private var viewModel = RssFeedViewModel()
     @ObservedObject private var selectFeedDataViewModel = SelectFeedDataViewModel()
+    @ObservedObject private var favoriteFeedDataViewModel = FavoriteFeedDataViewModel()
     @Environment(\.managedObjectContext)private var context
 
     static let rowHeight: CGFloat = 50
@@ -18,6 +19,8 @@ struct NewsListView: View {
     
     let sortItems: [String] = [Const.sortItemsNew, Const.sortItemsOld]
     @State private var selectedIndex = 0
+    @State private var isFavorite = false
+    @State private var favoriteFeedDatas: [FavoriteFeedData] = []
 
     var body: some View {
         NavigationStack {
@@ -46,12 +49,36 @@ struct NewsListView: View {
                                     Text("・\(newsItem.title)")
                                 }
                             )
+                            .swipeActions(edge: .trailing) {
+                                Button(action:{
+                                    self.isFavorite = getIsFavorite(newsItem: newsItem)
+                                    self.isFavorite.toggle()
+                                    if self.isFavorite {
+                                        print("お気に入り登録：\(newsItem)")
+                                        favoriteFeedDataViewModel.favoriteItem = newsItem
+                                        favoriteFeedDataViewModel.writeData(context: context)
+                                    } else {
+                                        print("お気に入り登録解除：\(newsItem)")
+                                        favoriteFeedDataViewModel.deleteGuid = newsItem.guid
+                                        favoriteFeedDataViewModel.deleteData(context: context)
+                                    }
+                                }) {
+                                    if getIsFavorite(newsItem: newsItem) {
+                                        Text(Const.registerdFavorite)
+                                    } else {
+                                        Text(Const.nonRegisterdFavorite)
+                                    }
+
+                                }
+                            }
                         }
                     }
-                    NavigationLink {
-                        SelectRssFeedView()
-                    } label: {
-                        Text(Const.toSelectRssFeedView)
+                    Section {
+                        NavigationLink {
+                            SelectRssFeedView()
+                        } label: {
+                            Text(Const.toSelectRssFeedView)
+                        }
                     }
                 }
             }
@@ -68,6 +95,19 @@ struct NewsListView: View {
     init(url: String?) {
         self.url = url
         self.selectFeedDataViewModel.url = url ?? ""
+    }
+
+    func getIsFavorite(newsItem: NewsItem) -> Bool {
+        DispatchQueue.main.async {
+            self.favoriteFeedDatas = favoriteFeedDataViewModel.getAllData(context: context)
+            print("お気に入り登録済みの記事：\(self.favoriteFeedDatas)")
+        }
+        for favoriteItem in favoriteFeedDatas {
+            if favoriteItem.guid == newsItem.guid {
+                return true
+            }
+        }
+        return false
     }
 }
 
