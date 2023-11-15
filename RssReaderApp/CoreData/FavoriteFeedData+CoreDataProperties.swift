@@ -19,7 +19,7 @@ extension FavoriteFeedData {
     @NSManaged public var guid: String?
     @NSManaged public var id: String?
     @NSManaged public var pubDate: String?
-    @NSManaged public var titie: String?
+    @NSManaged public var title: String?
     @NSManaged public var url: String?
 
 }
