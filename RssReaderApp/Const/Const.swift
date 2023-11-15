@@ -8,10 +8,8 @@
 import Foundation
 
 class Const {
-    // MARK: - SplashScreem
     static let splashText = "RSSReaderApp";
 
-    // MARK: - SelectRssFeedView
     static let selectRssFeedViewTitle = "RSSフィード選択画面";
     static let topPics = "・主要";
     static let topPicsXML = "https://news.yahoo.co.jp/rss/topics/top-picks.xml";
@@ -32,13 +30,15 @@ class Const {
     static let local = "・地域";
     static let localXML = "https://news.yahoo.co.jp/rss/topics/local.xml";
 
-    // MARK: - NewsListView
     static let toSelectRssFeedView = "RSSフィード選択画面へ";
 
     static let sortItemsNew = "新着順"
     static let sortItemsOld = "古い順"
     static let favorite = "お気に入り"
 
-    static let registerdFavorite = "お気に入り\n登録済み"
-    static let nonRegisterdFavorite = "お気に入り\n未登録"
+    static let cancellRegisteFavorite = "お気に入り\n登録解除"
+    static let registerFavorite = "お気に入り\n登録"
+
+    static let detailCancellRegisteFavorite = "お気に入り登録解除"
+    static let detailRegisterFavorite = "お気に入り登録"
 }

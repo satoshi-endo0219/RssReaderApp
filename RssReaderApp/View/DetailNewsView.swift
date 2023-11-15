@@ -34,14 +34,41 @@ struct WebView: UIViewRepresentable {
 }
 
 struct DetailNewsView: View {
-    let loadUrl: String?
-
+    @ObservedObject private var favoriteFeedDataViewModel = FavoriteFeedDataViewModel()
+    @Environment(\.managedObjectContext)private var context
+    @State var isFavorite: Bool = false
+    var newsItem: NewsItem?
     var body: some View {
-        WebView(loadUrl: loadUrl)
+        WebView(loadUrl: newsItem?.link ?? "")
+        Button(action: {
+            guard let newsItem = newsItem else {
+                print("newsItem is nil")
+                return
+            }
+            self.isFavorite.toggle()
+            favoriteFeedDataViewModel.newsItem = newsItem
+            favoriteFeedDataViewModel.writeData(context: context)
+        }, label: {
+            if self.isFavorite {
+                Text(Const.detailCancellRegisteFavorite)
+            } else {
+                Text(Const.detailRegisterFavorite)
+            }
+        })
+        .frame(maxWidth: .infinity, maxHeight: 44)
+        .background(Color(UIColor.lightGray))
+        .onAppear() {
+            let favoriteDatas = favoriteFeedDataViewModel.getAllData(context: context)
+            for favoriteData in favoriteDatas {
+                if newsItem?.guid == favoriteData.guid {
+                    isFavorite = true
+                }
+            }
+        }
     }
 
-    init(url: String? = nil) {
-        self.loadUrl = url
+    init(newsItem: NewsItem? = nil) {
+        self.newsItem = newsItem
     }
 }
 
