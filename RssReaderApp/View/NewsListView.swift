@@ -44,7 +44,7 @@ struct NewsListView: View {
                             ForEach($favoriteFeedDatas, id: \.self, editActions: .delete) { $favoriteItem in
                                 NavigationLink(
                                     destination: {
-                                        DetailNewsView(url: favoriteItem.url)
+                                        DetailNewsView(newsItem: NewsItem(title: favoriteItem.title ?? "", link: favoriteItem.url ?? "", guid: favoriteItem.guid ?? "", pubDate: favoriteItem.pubDate ?? ""))
                                     }, label: {
                                         Text("・\(favoriteItem.title ?? "")")
                                     }
@@ -63,7 +63,8 @@ struct NewsListView: View {
                             ForEach(viewModel.rssFeedData.items, id: \.self) { newsItem in
                                 NavigationLink(
                                     destination: {
-                                        DetailNewsView(url: newsItem.link)
+                                        DetailNewsView(newsItem: newsItem)
+//                                        DetailNewsView(url: newsItem.link)
                                     },
                                     label: {
                                         Text("・\(newsItem.title)")
@@ -120,20 +121,13 @@ struct NewsListSwipeActionButton: View {
         Button(action:{
             self.isFavorite = getIsFavorite(newsItem: newsItem)
             self.isFavorite.toggle()
-            if self.isFavorite {
-                print("お気に入り登録：\(newsItem)")
-                favoriteFeedDataViewModel.favoriteItem = newsItem
-                favoriteFeedDataViewModel.writeData(context: context)
-            } else {
-                print("お気に入り登録解除：\(newsItem)")
-                favoriteFeedDataViewModel.deleteGuid = newsItem.guid
-                favoriteFeedDataViewModel.deleteData(context: context)
-            }
+            favoriteFeedDataViewModel.newsItem = newsItem
+            favoriteFeedDataViewModel.writeData(context: context)
         }) {
             if getIsFavorite(newsItem: newsItem) {
-                Text(Const.registerdFavorite)
+                Text(Const.cancellRegisteFavorite)
             } else {
-                Text(Const.nonRegisterdFavorite)
+                Text(Const.registerFavorite)
             }
         }
     }

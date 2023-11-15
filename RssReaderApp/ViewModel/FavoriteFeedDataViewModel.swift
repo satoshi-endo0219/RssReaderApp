@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 
 class FavoriteFeedDataViewModel: ObservableObject {
-    @Published var favoriteItem = NewsItem(title: "", link: "", guid: "", pubDate: "")
+    @Published var newsItem = NewsItem(title: "", link: "", guid: "", pubDate: "")
     @Published var deleteGuid: String = ""
     @Published var id = UUID().uuidString
 
@@ -21,6 +21,14 @@ class FavoriteFeedDataViewModel: ObservableObject {
     /// - Parameter:
     ///   - context: レコードの操作を管理するマネージャー
     func writeData(context: NSManagedObjectContext) {
+        let favoriteFeedDatas = getAllData(context: context)
+        // FavoriteFeedDatas内にnewsItem.guidが存在している場合、CoreDataからnewsItem.guidのデータを削除
+        let isFavoriteData = favoriteFeedDatas.contains(where: { $0.guid == newsItem.guid })
+        if isFavoriteData {
+            deleteData(context: context)
+            return
+        }
+        // FavoriteFeedDatas内にnewsItem.guidが存在していない場合、CoreDataへnewsItemを登録
         insertData(context: context)
     }
     
@@ -29,13 +37,13 @@ class FavoriteFeedDataViewModel: ObservableObject {
     ///   - context: レコードの操作を管理するマネージャー
     func insertData(context: NSManagedObjectContext) {
         do {
-            if !favoriteItem.title.isEmpty {
+            if !newsItem.title.isEmpty {
                 let newFavoriteFeedData = FavoriteFeedData(context: context)
                 newFavoriteFeedData.id = UUID().uuidString
-                newFavoriteFeedData.url = favoriteItem.link
-                newFavoriteFeedData.title = favoriteItem.title
-                newFavoriteFeedData.guid = favoriteItem.guid
-                newFavoriteFeedData.pubDate = favoriteItem.pubDate
+                newFavoriteFeedData.url = newsItem.link
+                newFavoriteFeedData.title = newsItem.title
+                newFavoriteFeedData.guid = newsItem.guid
+                newFavoriteFeedData.pubDate = newsItem.pubDate
                 try context.save()
             }
         } catch let error as NSError {
@@ -48,7 +56,7 @@ class FavoriteFeedDataViewModel: ObservableObject {
     ///   - context: レコードの操作を管理するマネージャー
     func deleteData(context: NSManagedObjectContext) {
         let request = NSFetchRequest<FavoriteFeedData>(entityName: "FavoriteFeedData")
-        request.predicate = NSPredicate(format: "guid = %@", deleteGuid)
+        request.predicate = NSPredicate(format: "guid = %@", newsItem.guid)
         do {
             let myResults = try context.fetch(request)
 
