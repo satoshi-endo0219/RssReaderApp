@@ -10,7 +10,6 @@ import CoreData
 
 class FavoriteFeedDataViewModel: ObservableObject {
     @Published var newsItem = NewsItem(title: "", link: "", guid: "", pubDate: "")
-    @Published var deleteGuid: String = ""
     @Published var id = UUID().uuidString
 
     private let request = NSFetchRequest<FavoriteFeedData>(entityName: "FavoriteFeedData")
