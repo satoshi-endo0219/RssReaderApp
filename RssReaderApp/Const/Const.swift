@@ -46,4 +46,6 @@ class Const {
 
     static let alreadyRead = "既読";
     static let nonAlreadyRead = "未読";
+
+    static let nonAlreadyReadList = "未読一覧";
 }
