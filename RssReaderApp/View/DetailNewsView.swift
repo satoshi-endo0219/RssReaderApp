@@ -41,6 +41,7 @@ struct DetailNewsView: View {
     }
     @State private var selection: TabSelection = .none
     @ObservedObject private var favoriteFeedDataViewModel = FavoriteFeedDataViewModel()
+    @ObservedObject private var alreadyNewsDataViewModel = AlreadyReadNewsDataViewModel()
     @Environment(\.managedObjectContext)private var context
     @State var isFavorite: Bool = false
     @State private var isPresentActivityController = false
@@ -86,6 +87,8 @@ struct DetailNewsView: View {
                     isFavorite = true
                 }
             }
+            alreadyNewsDataViewModel.guid = newsItem?.guid ?? ""
+            alreadyNewsDataViewModel.writeData(context: context)
         }
     }
 

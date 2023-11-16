@@ -32,13 +32,18 @@ class Const {
 
     static let toSelectRssFeedView = "RSSフィード選択画面へ";
 
-    static let sortItemsNew = "新着順"
-    static let sortItemsOld = "古い順"
-    static let favorite = "お気に入り"
+    static let sortItemsNew = "新着順";
+    static let sortItemsOld = "古い順";
+    static let favorite = "お気に入り";
 
-    static let cancellRegisteFavorite = "お気に入り\n登録解除"
-    static let registerFavorite = "お気に入り\n登録"
+    static let cancellRegisteFavorite = "お気に入り\n登録解除";
+    static let registerFavorite = "お気に入り\n登録";
 
-    static let detailCancellRegisteFavorite = "お気に入り登録解除"
-    static let detailRegisterFavorite = "お気に入り登録"
+    static let detailCancellRegisteFavorite = "お気に入り登録解除";
+    static let detailRegisterFavorite = "お気に入り登録";
+
+    static let sortOrder = "並び替え";
+
+    static let alreadyRead = "既読";
+    static let nonAlreadyRead = "未読";
 }

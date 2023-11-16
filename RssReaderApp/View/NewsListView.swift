@@ -12,20 +12,22 @@ struct NewsListView: View {
     @ObservedObject private var viewModel = RssFeedViewModel()
     @ObservedObject private var selectFeedDataViewModel = SelectFeedDataViewModel()
     @ObservedObject private var favoriteFeedDataViewModel = FavoriteFeedDataViewModel()
+    @ObservedObject private var alreadyReadNewsDataViewModel = AlreadyReadNewsDataViewModel()
     @Environment(\.managedObjectContext)private var context
     
-    let sortItems: [String] = [Const.sortItemsNew, Const.sortItemsOld, Const.favorite]
+    let sortItems: [String] = [Const.sortItemsNew, Const.sortItemsOld, Const.nonAlreadyRead, Const.favorite]
     @State private var selectedIndex = 0
     @State private var favoriteFeedDatas: [FavoriteFeedData] = []
-
+    @State private var isAlreadyRead: Bool = true
+    @State private var nonAlreadyReadNewsItems: [NewsItem] = []
     var body: some View {
         NavigationStack {
             VStack {
                 HStack {
                     Spacer()
-                    Text("並び替え:")
+                    Text("\(Const.sortOrder):")
                         .font(.system(size: 16))
-                    Picker("並び替え", selection: $selectedIndex, content: {
+                    Picker(Const.sortOrder, selection: $selectedIndex, content: {
                         ForEach(0 ..< sortItems.count, id: \.self) { num in
                             Text(self.sortItems[num])
                         }
@@ -44,15 +46,25 @@ struct NewsListView: View {
                             ForEach($favoriteFeedDatas, id: \.self, editActions: .delete) { $favoriteItem in
                                 NavigationLink(
                                     destination: {
-                                        DetailNewsView(newsItem: NewsItem(title: favoriteItem.title ?? "", link: favoriteItem.url ?? "", guid: favoriteItem.guid ?? "", pubDate: favoriteItem.pubDate ?? ""))
-                                    }, label: {
-                                        Text("・\(favoriteItem.title ?? "")")
+                                        DetailNewsView(newsItem: toNewsItem(favoriteItem: $favoriteItem.wrappedValue))
+                                    },
+                                    label: {
+                                        HStack {
+                                            if $isAlreadyRead.wrappedValue {
+                                                Text(getAlreadyReadString(newsItem: toNewsItem(favoriteItem: $favoriteItem.wrappedValue)))
+                                            } else {
+                                                Text(getAlreadyReadString(newsItem: toNewsItem(favoriteItem: $favoriteItem.wrappedValue)))
+                                            }
+                                            Text("・\($favoriteItem.title.wrappedValue ?? "")")
+                                                .truncationMode(.tail)
+                                                .lineLimit(1)
+                                        }
                                     }
                                 )
                             }.onDelete(perform: { indexSet in
                                 for index in indexSet{
-                                    let deleteGuid = favoriteFeedDatas[index].guid
-                                    favoriteFeedDataViewModel.deleteGuid = deleteGuid ?? ""
+                                    let favoriteItem = favoriteFeedDatas[index]
+                                    favoriteFeedDataViewModel.newsItem = toNewsItem(favoriteItem: favoriteItem)
                                     favoriteFeedDataViewModel.deleteData(context: context)
                                 }
                                 rowRemove(offsets: indexSet)
@@ -64,10 +76,18 @@ struct NewsListView: View {
                                 NavigationLink(
                                     destination: {
                                         DetailNewsView(newsItem: newsItem)
-//                                        DetailNewsView(url: newsItem.link)
                                     },
                                     label: {
-                                        Text("・\(newsItem.title)")
+                                        HStack {
+                                            if $isAlreadyRead.wrappedValue {
+                                                Text(getAlreadyReadString(newsItem: newsItem))
+                                            } else {
+                                                Text(getAlreadyReadString(newsItem: newsItem))
+                                            }
+                                            Text("・\(newsItem.title)")
+                                                .truncationMode(.tail)
+                                                .lineLimit(1)
+                                        }
                                     }
                                 )
                                 .swipeActions(edge: .trailing) {
@@ -102,6 +122,31 @@ struct NewsListView: View {
     /// 行削除処理
     func rowRemove(offsets: IndexSet) {
         favoriteFeedDatas.remove(atOffsets: offsets)
+    }
+
+    func getAlreadyReadString(newsItem: NewsItem) -> String {
+        let alreadyNewsDatas = alreadyReadNewsDataViewModel.getAllData(context: context)
+        let isALreadyNewsItem = alreadyNewsDatas.contains(where: { $0.guid == newsItem.guid })
+        if isALreadyNewsItem {
+            return Const.alreadyRead
+        }
+        return Const.nonAlreadyRead
+    }
+
+    func toNewsItem(favoriteItem: FavoriteFeedData) -> NewsItem {
+        return NewsItem(title: favoriteItem.title ?? "", link: favoriteItem.url ?? "", guid: favoriteItem.guid ?? "", pubDate: favoriteItem.pubDate ?? "")
+    }
+
+    func getNonAlreadyReadNewsDatas() {
+        let alreadyNewsItems = alreadyReadNewsDataViewModel.getAllData(context: context)
+        let newsItems = viewModel.rssFeedData.items
+        for newsItem in newsItems {
+            for alreadyNewsItem in alreadyNewsItems {
+                if newsItem.guid != alreadyNewsItem.guid {
+                    nonAlreadyReadNewsItems.append(newsItem)
+                }
+            }
+        }
     }
 }
 
