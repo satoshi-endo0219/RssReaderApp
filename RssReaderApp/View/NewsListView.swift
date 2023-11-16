@@ -15,10 +15,10 @@ struct NewsListView: View {
     @ObservedObject private var alreadyReadNewsDataViewModel = AlreadyReadNewsDataViewModel()
     @Environment(\.managedObjectContext)private var context
     
-    let sortItems: [String] = [Const.sortItemsNew, Const.sortItemsOld, Const.nonAlreadyRead, Const.favorite]
+    let sortItems: [String] = [Const.sortItemsNew, Const.sortItemsOld, Const.nonAlreadyReadList, Const.favorite]
     @State private var selectedIndex = 0
     @State private var favoriteFeedDatas: [FavoriteFeedData] = []
-    @State private var isAlreadyRead: Bool = true
+    @State private var isAlreadyRead: Bool = false
     @State private var nonAlreadyReadNewsItems: [NewsItem] = []
     var body: some View {
         NavigationStack {
@@ -35,7 +35,13 @@ struct NewsListView: View {
                 }
                 .onChange(of: selectedIndex) { num in
                     if sortItems[num] == Const.favorite {
-                        favoriteFeedDatas = favoriteFeedDataViewModel.getAllData(context: context)
+                        if favoriteFeedDatas.isEmpty {
+                            favoriteFeedDatas = favoriteFeedDataViewModel.getAllData(context: context)
+                        }
+                    } else if sortItems[num] == Const.nonAlreadyReadList {
+                        if nonAlreadyReadNewsItems.isEmpty {
+                            nonAlreadyReadNewsItems = getNonAlreadyReadNewsDatas()
+                        }
                     } else {
                         viewModel.sort(sortItem: sortItems[num])
                     }
@@ -47,7 +53,11 @@ struct NewsListView: View {
                                 NavigationLink(
                                     destination: {
                                         DetailNewsView(newsItem: toNewsItem(favoriteItem: $favoriteItem.wrappedValue))
-                                    },
+                                    }()
+                                        .onDisappear {
+                                            isAlreadyRead = true
+                                        }
+                                    ,
                                     label: {
                                         HStack {
                                             if $isAlreadyRead.wrappedValue {
@@ -70,13 +80,46 @@ struct NewsListView: View {
                                 rowRemove(offsets: indexSet)
                             })
                         }
+                    } else if sortItems[selectedIndex] == Const.nonAlreadyReadList {
+                        Section(header: Text(viewModel.rssFeedData.feed.title)) {
+                            ForEach($nonAlreadyReadNewsItems, id: \.self) { $newsItem in
+                                NavigationLink(
+                                    destination: {
+                                        DetailNewsView(newsItem: $newsItem.wrappedValue)
+                                    }()
+                                        .onDisappear{
+                                            nonAlreadyReadNewsItems = getNonAlreadyReadNewsDatas()
+                                        }
+                                    ,
+                                    label: {
+                                        Text("・\($newsItem.title.wrappedValue)")
+                                            .truncationMode(.tail)
+                                            .lineLimit(1)
+                                    }
+                                )
+                                .swipeActions(edge: .trailing) {
+                                    NewsListSwipeActionButton(newsItem: $newsItem.wrappedValue)
+                                }
+                            }
+                        }
+                        Section {
+                            NavigationLink {
+                                SelectRssFeedView()
+                            } label: {
+                                Text(Const.toSelectRssFeedView)
+                            }
+                        }
                     } else {
                         Section(header: Text(viewModel.rssFeedData.feed.title)) {
                             ForEach(viewModel.rssFeedData.items, id: \.self) { newsItem in
                                 NavigationLink(
                                     destination: {
                                         DetailNewsView(newsItem: newsItem)
-                                    },
+                                    }()
+                                        .onDisappear {
+                                            isAlreadyRead = true
+                                        }
+                                    ,
                                     label: {
                                         HStack {
                                             if $isAlreadyRead.wrappedValue {
@@ -137,16 +180,14 @@ struct NewsListView: View {
         return NewsItem(title: favoriteItem.title ?? "", link: favoriteItem.url ?? "", guid: favoriteItem.guid ?? "", pubDate: favoriteItem.pubDate ?? "")
     }
 
-    func getNonAlreadyReadNewsDatas() {
+    func getNonAlreadyReadNewsDatas() -> [NewsItem] {
+        var newsItems = viewModel.rssFeedData.items
         let alreadyNewsItems = alreadyReadNewsDataViewModel.getAllData(context: context)
-        let newsItems = viewModel.rssFeedData.items
-        for newsItem in newsItems {
-            for alreadyNewsItem in alreadyNewsItems {
-                if newsItem.guid != alreadyNewsItem.guid {
-                    nonAlreadyReadNewsItems.append(newsItem)
-                }
-            }
+        for alreadyNewsItem in alreadyNewsItems {
+            newsItems.removeAll(where: { $0.guid == alreadyNewsItem.guid})
         }
+        print("未読一覧：\(newsItems)")
+        return newsItems
     }
 }
 

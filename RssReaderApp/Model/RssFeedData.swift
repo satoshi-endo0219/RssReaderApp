@@ -39,7 +39,7 @@ struct FeedData: Codable {
 
 struct NewsItem: Codable, Hashable {
     /// Newsタイトル
-    let title: String
+    var title: String
     /// NewsのLink
     let link: String
     /// guid
