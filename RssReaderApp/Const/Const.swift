@@ -34,6 +34,8 @@ class Const {
 
     static let sortItemsNew = "新着順";
     static let sortItemsOld = "古い順";
+    static let nonAlreadyReadList = "未読一覧";
+    static let afterReadingList = "あとで読む一覧"
     static let favorite = "お気に入り";
 
     static let cancellRegisteFavorite = "お気に入り\n登録解除";
@@ -47,5 +49,7 @@ class Const {
     static let alreadyRead = "既読";
     static let nonAlreadyRead = "未読";
 
-    static let nonAlreadyReadList = "未読一覧";
+    static let registerAfterReading = "あとで読む\n登録"
+    static let cancelRegisterAfterReading = "あとで読む\n登録解除"
+
 }
