@@ -32,9 +32,11 @@ class Const {
 
     static let toSelectRssFeedView = "RSSフィード選択画面へ";
 
+    static let newsList = "記事一覧"
     static let sortItemsNew = "新着順";
     static let sortItemsOld = "古い順";
     static let nonAlreadyReadList = "未読一覧";
+    static let afterReading = "あとで読む"
     static let afterReadingList = "あとで読む一覧"
     static let favorite = "お気に入り";
 
