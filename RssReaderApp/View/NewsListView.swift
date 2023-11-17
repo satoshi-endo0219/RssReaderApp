@@ -13,13 +13,15 @@ struct NewsListView: View {
     @ObservedObject private var selectFeedDataViewModel = SelectFeedDataViewModel()
     @ObservedObject private var favoriteFeedDataViewModel = FavoriteFeedDataViewModel()
     @ObservedObject private var alreadyReadNewsDataViewModel = AlreadyReadNewsDataViewModel()
+    @ObservedObject private var afterReadingNewsDataViewModel = AfterReadingNewsDataViewModel()
     @Environment(\.managedObjectContext)private var context
     
-    let sortItems: [String] = [Const.sortItemsNew, Const.sortItemsOld, Const.nonAlreadyReadList, Const.favorite]
+    let sortItems: [String] = [Const.sortItemsNew, Const.sortItemsOld, Const.nonAlreadyReadList, Const.afterReadingList, Const.favorite]
     @State private var selectedIndex = 0
     @State private var favoriteFeedDatas: [FavoriteFeedData] = []
     @State private var isAlreadyRead: Bool = false
     @State private var nonAlreadyReadNewsItems: [NewsItem] = []
+    @State private var afterReadingDatas: [AfterReadingNewsData] = []
     var body: some View {
         NavigationStack {
             VStack {
@@ -35,14 +37,12 @@ struct NewsListView: View {
                 }
                 .onChange(of: selectedIndex) { num in
                     if sortItems[num] == Const.favorite {
-                        if favoriteFeedDatas.isEmpty {
-                            favoriteFeedDatas = favoriteFeedDataViewModel.getAllData(context: context)
-                        }
+                        favoriteFeedDatas = favoriteFeedDataViewModel.getAllData(context: context)
                     } else if sortItems[num] == Const.nonAlreadyReadList {
-                        if nonAlreadyReadNewsItems.isEmpty {
-                            nonAlreadyReadNewsItems = getNonAlreadyReadNewsDatas()
-                        }
-                    } else {
+                        nonAlreadyReadNewsItems = getNonAlreadyReadNewsDatas()
+                    } else if sortItems[num] == Const.afterReadingList {
+                        afterReadingDatas = afterReadingNewsDataViewModel.getAllData(context: context)
+                    }else {
                         viewModel.sort(sortItem: sortItems[num])
                     }
                 }
@@ -109,6 +109,40 @@ struct NewsListView: View {
                                 Text(Const.toSelectRssFeedView)
                             }
                         }
+                    } else if sortItems[selectedIndex] == Const.afterReadingList {
+                        Section(header: Text(Const.afterReadingList)) {
+                            ForEach($afterReadingDatas, id: \.self) { $afterReadingData in
+                                NavigationLink(
+                                    destination: {
+                                        DetailNewsView(newsItem: toNewsItem(afterReadingItem: $afterReadingData.wrappedValue))
+                                    }()
+                                        .onDisappear {
+                                            isAlreadyRead = true
+                                        }
+                                    ,
+                                    label: {
+                                        HStack {
+                                            if $isAlreadyRead.wrappedValue {
+                                                Text(getAlreadyReadString(newsItem: toNewsItem(afterReadingItem: $afterReadingData.wrappedValue)))
+                                            } else {
+                                                Text(getAlreadyReadString(newsItem: toNewsItem(afterReadingItem: $afterReadingData.wrappedValue)))
+                                            }
+                                            Text("・\($afterReadingData.title.wrappedValue ?? "")")
+                                                .truncationMode(.tail)
+                                                .lineLimit(1)
+                                        }
+                                    }
+                                )
+                            }
+                            .onDelete(perform: { indexSet in
+                                for index in indexSet{
+                                    let afterReadingItem = afterReadingDatas[index]
+                                    afterReadingNewsDataViewModel.newsItem = toNewsItem(afterReadingItem: afterReadingItem)
+                                    afterReadingNewsDataViewModel.deleteData(context: context)
+                                }
+                                rowRemove(offsets: indexSet)
+                            })
+                        }
                     } else {
                         Section(header: Text(viewModel.rssFeedData.feed.title)) {
                             ForEach(viewModel.rssFeedData.items, id: \.self) { newsItem in
@@ -162,9 +196,17 @@ struct NewsListView: View {
         self.url = url
         self.selectFeedDataViewModel.url = url ?? ""
     }
+
     /// 行削除処理
     func rowRemove(offsets: IndexSet) {
-        favoriteFeedDatas.remove(atOffsets: offsets)
+        switch sortItems[selectedIndex] {
+            case Const.favorite:
+                self.favoriteFeedDatas.remove(atOffsets: offsets)
+            case Const.afterReadingList:
+                self.afterReadingDatas.remove(atOffsets: offsets)
+            default:
+                break
+        }
     }
 
     func getAlreadyReadString(newsItem: NewsItem) -> String {
@@ -176,8 +218,15 @@ struct NewsListView: View {
         return Const.nonAlreadyRead
     }
 
-    func toNewsItem(favoriteItem: FavoriteFeedData) -> NewsItem {
-        return NewsItem(title: favoriteItem.title ?? "", link: favoriteItem.url ?? "", guid: favoriteItem.guid ?? "", pubDate: favoriteItem.pubDate ?? "")
+    func toNewsItem(favoriteItem: FavoriteFeedData? = nil, afterReadingItem: AfterReadingNewsData? = nil ) -> NewsItem {
+        var newsItem = NewsItem(title: "", link: "", guid: "", pubDate: "")
+        if let favoriteItem = favoriteItem {
+            newsItem = NewsItem(title: favoriteItem.title ?? "", link: favoriteItem.url ?? "", guid: favoriteItem.guid ?? "", pubDate: favoriteItem.pubDate ?? "")
+        }
+        if let  afterReadingItem = afterReadingItem {
+            newsItem = NewsItem(title: afterReadingItem.title ?? "", link: afterReadingItem.url ?? "", guid: afterReadingItem.guid ?? "", pubDate: afterReadingItem.pubDate ?? "")
+        }
+        return newsItem
     }
 
     func getNonAlreadyReadNewsDatas() -> [NewsItem] {
@@ -200,20 +249,35 @@ struct NewsListView_preview: PreviewProvider {
 struct NewsListSwipeActionButton: View {
     @ObservedObject private var favoriteFeedDataViewModel = FavoriteFeedDataViewModel()
     @State var newsItem: NewsItem
-    @State private var favoriteFeedDatas: [FavoriteFeedData] = []
     @State private var isFavorite = false
+    @ObservedObject private var afterReadingNewsDataViewModel = AfterReadingNewsDataViewModel()
+    @State private var isAfterReading = false
     @Environment(\.managedObjectContext)private var context
     var body: some View {
-        Button(action:{
-            self.isFavorite = getIsFavorite(newsItem: newsItem)
-            self.isFavorite.toggle()
-            favoriteFeedDataViewModel.newsItem = newsItem
-            favoriteFeedDataViewModel.writeData(context: context)
-        }) {
-            if getIsFavorite(newsItem: newsItem) {
-                Text(Const.cancellRegisteFavorite)
-            } else {
-                Text(Const.registerFavorite)
+        HStack {
+            Button(action:{
+                self.isFavorite = getIsFavorite(newsItem: newsItem)
+                self.isFavorite.toggle()
+                favoriteFeedDataViewModel.newsItem = newsItem
+                favoriteFeedDataViewModel.writeData(context: context)
+            }) {
+                if getIsFavorite(newsItem: newsItem) {
+                    Text(Const.cancellRegisteFavorite)
+                } else {
+                    Text(Const.registerFavorite)
+                }
+            }
+            Button(action: {
+                self.isAfterReading = getIsAfterReading(newsItem: newsItem)
+                self.isAfterReading.toggle()
+                afterReadingNewsDataViewModel.newsItem = newsItem
+                afterReadingNewsDataViewModel.writeData(context: context)
+            }) {
+                if getIsAfterReading(newsItem: newsItem) {
+                    Text(Const.cancelRegisterAfterReading)
+                } else {
+                    Text(Const.registerAfterReading)
+                }
             }
         }
     }
@@ -223,12 +287,17 @@ struct NewsListSwipeActionButton: View {
     }
 
     func getIsFavorite(newsItem: NewsItem) -> Bool {
-        DispatchQueue.main.async {
-            self.favoriteFeedDatas = favoriteFeedDataViewModel.getAllData(context: context)
-            print("お気に入り登録済みの記事：\(self.favoriteFeedDatas)")
-        }
-        for favoriteItem in favoriteFeedDatas {
+        for favoriteItem in favoriteFeedDataViewModel.getAllData(context: context) {
             if favoriteItem.guid == newsItem.guid {
+                return true
+            }
+        }
+        return false
+    }
+
+    func getIsAfterReading(newsItem: NewsItem) -> Bool {
+        for afterReadingData in afterReadingNewsDataViewModel.getAllData(context: context) {
+            if afterReadingData.guid == newsItem.guid {
                 return true
             }
         }
